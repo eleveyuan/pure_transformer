@@ -69,9 +69,9 @@ def get_model(opt, src_vocab, trg_vocab):
 
     model = Transformer(src_vocab, trg_vocab, opt.d_model, opt.n_layers, opt.heads, opt.dropout)
 
-    if opt.load_weights is not None:
+    if opt.load_weights:
         print("loading pretrained weights...")
-        model.load_state_dict(torch.load(f'{opt.load_weights}/model_weights'))
+        model.load_state_dict(torch.load(f'weights/model_weights'))
     else:
         for p in model.parameters():
             if p.dim() > 1:

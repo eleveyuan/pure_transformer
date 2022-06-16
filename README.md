@@ -6,12 +6,23 @@ pure_transformer is just a repo about transformer, derived from [SamLynnEvans/Tr
 2. update code with new pytorch api
 
 
+# Usage
+
+first, you would like to train your model, as follow
+``` shell
+python train.py -src_data pathto/lang1.txt -trg_data pathto/lang2.txt -src_lang lang1 -trg_lang lang2
+```
+after train model, you can get a vocab and a model in folder **weights/**.
+
+we set deafult args in code. download this repo, and just click you run button. Then take a meal, whatever
+
+
 ### torchtext.data have no attribute 'Iterator' in the latest release
 torchtext.data and torchtext.legacy will be complete removed.
 In this [issue link](https://github.com/pytorch/text/issues/1275), you can find a 
 [migration tutorial](https://github.com/pytorch/text/blob/master/examples/legacy_tutorial/migration_tutorial.ipynb).
-we rewrite code with "torch.utils.data.DataLoader" api.
 
+if you want to customize your data input, you can follow the tutorial, or you can like me, debug code, find what kind of data we put in model. 
 
 ### torch.autograd.Variable() deprecated
 ```

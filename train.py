@@ -57,7 +57,7 @@ def train(model, dataset, opt):
                 print("=>   %dm: epoch %d [%s%s]  %d%%  loss = %.3f" %
                       ((time.time() - start) // 60, epoch + 1, "".join('#' * (p // 5)),
                        "".join(' ' * (20 - (p // 5))), p, avg_loss))
-                total_loass = 0
+                total_loss = 0
 
             if opt.checkpoint > 0 and ((time.time() - cptime) // 60) // opt.checkpoint >= 1:
                 torch.save(model.state_dict(), 'weights/model_weights')
@@ -69,8 +69,9 @@ def train(model, dataset, opt):
               ((time.time() - start) // 60, epoch + 1, "".join('#' * (100 // 5)), "".join(' ' * (20 - (100 // 5))), 100,
                avg_loss, epoch + 1, avg_loss))
 
-    if not opt.load_weights:
+    if not os.path.exists('weights'):
         os.mkdir('weights')
+    if not opt.load_weights:
         pickle.dump(dataset, open('weights/dataset.pkl', 'wb'))
         torch.save(model.state_dict(), 'weights/model_weights')
 

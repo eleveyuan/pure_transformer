@@ -43,7 +43,8 @@ def k_best_outputs(outputs, out, log_scores, i, k):
     log_probs = torch.Tensor([math.log(p) for p in probs.data.view(-1)]).view(k, -1) + log_scores.transpose(0, 1)
     k_probs, k_ix = log_probs.view(-1).topk(k)
 
-    row = k_ix // k
+    # row = k_ix // k
+    row = torch.div(k_ix, k, rounding_mode='floor')
     col = k_ix % k
 
     outputs[:, :i] = outputs[row, :i]
@@ -93,8 +94,8 @@ def beam_search(src, model, src_w2i, trg_w2i, trg_i2w, opt):
 
     if ind is None:
         length = (outputs[0] == eos_tok).nonzero()[0]
-        return ' '.join([trg_i2w[tok] for tok in outputs[0][1:length]])
+        return ' '.join([trg_i2w[tok.item()] for tok in outputs[0][1:length]])
 
     else:
         length = (outputs[ind] == eos_tok).nonzero()[0]
-        return ' '.join([trg_i2w[tok] for tok in outputs[ind][1:length]])
+        return ' '.join([trg_i2w[tok.item()] for tok in outputs[ind][1:length]])

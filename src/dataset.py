@@ -122,7 +122,11 @@ class MyDataset(Dataset):
                                  batch_first=True, padding_value=self.src_w2i['<pad>'])
         trg_batch = pad_sequence([torch.LongTensor(line) for line in tgt_tokens],
                                  batch_first=True, padding_value=self.trg_w2i['<pad>'])
+        
+        # we input all words except the last, as it is using each word to predict the next
+        trg_batch_y = trg_batch[:, 1:]
+        trg_batch = trg_batch[:, :-1]
 
         # for NMT task in transformer, you mask some sequence information
         src_mask, trg_mask = create_masks(src_batch, trg_batch, self.src_w2i['<pad>'], self.trg_w2i['<pad>'])
-        return src_batch, trg_batch, src_mask, trg_mask
+        return src_batch, trg_batch, trg_batch_y, src_mask, trg_mask

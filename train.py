@@ -33,12 +33,12 @@ def train(model, dataset, opt):
             torch.save(model.state_dict(), 'weights/model_weights')
 
         counter = 0
-        for src, trg, src_mask, trg_mask in dataloader:
+        for src, trg, trg_y, src_mask, trg_mask in dataloader:
             # trg_input = trg[:, :-1]
             preds = model(src, trg, src_mask, trg_mask)
             # print(src, trg, src_mask, trg_mask)
             # ys = trg[:, :-1].contiguous().view(-1)
-            ys = trg.view(-1)
+            ys = trg_y.contiguous().view(-1)
             # print(preds.view(-1, preds.size(-1)).size(), ys.size())
             opt.optimizer.zero_grad()
             loss = F.cross_entropy(preds.view(-1, preds.size(-1)), ys, ignore_index=trg_pad)

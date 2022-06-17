@@ -21,6 +21,9 @@ def train(model, dataset, opt):
     dataloader = DataLoader(dataset, shuffle=True, batch_size=opt.batchsize, collate_fn=dataset.collate_fn)
     iter_len = len(dataloader)
 
+    if opt.SGDR:
+        opt.sched = CosineWithRestarts(opt.optimizer, T_max=iter_len)
+
     model.train()
     start = time.time()
     if opt.checkpoint > 0:
@@ -107,8 +110,6 @@ def main():
     model = get_model(opt, dataset.src_vocab_size, dataset.trg_vocab_size)
 
     opt.optimizer = torch.optim.Adam(model.parameters(), lr=opt.lr, betas=(0.9, 0.98), eps=1e-9)
-    if opt.SGDR:
-        opt.sched = CosineWithRestarts(opt.optimizer, T_max=opt.train_len)
 
     if opt.checkpoint > 0:
         print(
